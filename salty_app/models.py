@@ -1,5 +1,4 @@
-# twitter_app/models.py
-
+# salty_app/models.py
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -10,27 +9,26 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 # Defining new class "Tweets": inherents db.model from SQLAlchemy above
-class Tweets(db.Model):
-    ###__table_name__ = "tweet_table" #> configuing table name
+class Comments(db.Model):
     # Configuring the attributes, and subsequent DB columns
-    id = db.Column(db.BigInteger, primary_key=True)
-    user_id = db.Column(db.BigInteger, db.ForeignKey("user.id"))
-    twitter_handle = db.Column(db.String(128))
-    full_text = db.Column(db.String(128))
-    embedding = db.Column(db.PickleType)
+    comment_id = db.Column(db.BigInteger, primary_key=True)
+    author_id = db.Column(db.BigInteger, db.ForeignKey("user.id"))
+    author_name = db.Column(db.String(128))
+    comment_text = db.Column(db.String)
+    salty_comment_score = db.Column(db.Float)
 
     # bi-directional association with User model
-    user = db.relationship("User", backref=db.backref("tweets", lazy=True))
+    user = db.relationship("User", backref=db.backref("Comments", lazy=True))
 
 # Defining new class "User": inherents db.model from SQLAlchemy above
 class User(db.Model):
     # Configuring attributes, and subsequent DB columns 
     id = db.Column(db.BigInteger, primary_key=True)
-    screen_name = db.Column(db.String(128), nullable=False)
-    name = db.Column(db.String)
-    location = db.Column(db.String)
-    followers_count = db.Column(db.Integer)
-    #latest_tweet_id = db.Column(db.BigInteger)
+    author_screen_name = db.Column(db.String(128), nullable=False)
+    comment_full_text = db.Column(db.String)
+    saltiness_rank = db.Column(db.Integer)
+    comment_count = db.Column(db.Integer)
+    word_count = db.Column(db.Integer)
 
 
 # Defining the parse_records function
