@@ -1,4 +1,16 @@
-# salty_app/__init__.py
+# # salty_app/__init__.py
+# import requests
+# import html
+# import re
+# import os
+# import pandas as pd
+# import psycopg2
+# from psycopg2.extras import execute_values
+# from sqlalchemy import create_engine
+# from dotenv import load_dotenv
+
+
+
 
 import os
 from dotenv import load_dotenv
@@ -16,9 +28,24 @@ from salty_app.routes.modeling_routes import modeling_routes
 from salty_app.routes.stats_routes import stats_routes
 from salty_app.routes.user_routes import user_routes
 
+# ENV_PATH = os.path.join(os.getcwd(), '.env')
+# load_dotenv(ENV_PATH)
+
+
+# ELE_DB_USER = os.getenv('ELE_DB_USER')
+# ELE_DB_NAME = os.getenv('ELE_DB_NAME')
+# ELE_DB_PW = os.getenv('ELE_DB_PW')
+# ELE_DB_HOST = os.getenv('ELE_DB_HOST')
+
+# conn = psycopg2.connect(dbname=ELE_DB_NAME, 
+#                         user=ELE_DB_USER,
+#                         password=ELE_DB_PW,
+#                         host=ELE_DB_HOST)
+
+# cursor = conn.cursor()
 
 # Creating DataBase name in the current directory -- using relative filepath
-DATABASE_URI = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 # Defining Function "create_app"
@@ -27,7 +54,7 @@ def create_app():
     app = Flask(__name__)
 
     # Configures the DataBase w/ name specified by "DATABASE_URI"
-    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
     # Initializes the DataBase
     db.init_app(app)
     # Migrates the app and DataBase

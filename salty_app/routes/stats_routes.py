@@ -1,48 +1,17 @@
-# web_app/routes/stats_routes.py
+# salty_app/routes/stats_routes.py
 
-##------------------------------------------------------------------------------
-# 1. Importing specified packages 
-##------------------------------------------------------------------------------
-
-### flask ###
-
-## Blueprint: 
-# "blueprint" or paradigm of how to construct or extend an app
-from flask import Blueprint
-## request: remembers the matched endpoint and view arguments; 
-# request.form: the key/value pairs in an HTML form body that isn't JSON encoded
-from flask import request 
-## render_template: renders an HTML template;
-# provide the name of the template and the variables you want to pass to the 
-# template engine as keyword arguments
-from flask import render_template
-
-### APIs / Connection Objects ###
-
-# Basilica API Connection (Object / Method)
-from twitter_app.services.basilica_service import basilica_conn
-# Tweets and User (Classes)
-from twitter_app.models import Tweets, User
-
-# SKLearn
-from sklearn.linear_model import LogisticRegression
+from flask import request, render_template, Blueprint 
+from salty_app.models import Comments, User
+# from sklearn.linear_model import LogisticRegression
 
 
 ##------------------------------------------------------------------------------
-# 2. Setting Blueprint; Defining Function and Variables 
+# 1. Setting Blueprint; Defining Function and Variables 
 ##------------------------------------------------------------------------------
-
-# Blueprint: attribute "stats_routes" refers to the .py file for __init__ IDing;
-# set equal to "stats_routes" so we can register the blueprint in the __init__ file
 stats_routes = Blueprint("stats_routes", __name__)
 
-# Decorator: ".route" to a particular page of the app; 
-# blueprint will record the intention of registering the function 
-@stats_routes.route("/predict", methods=["POST"])
-# Function: "predict"
-def predict():
-    #print("PREDICT ROUTE...")
-    # Creating a dictionary from the requested HTML form
+@stats_routes.route("/number/<comment_number>", methods=["POST"])
+def populate_db():
     print("FORM DATA:", dict(request.form))
     #> {'screen_name_a': 'wolfejosh', 'screen_name_b': 'paulg', 'tweet_text': 'Example tweet text here'}
     
