@@ -20,7 +20,7 @@ ELE_DB_PW = os.getenv('ELE_DB_PW')
 ELE_DB_HOST = os.getenv('ELE_DB_HOST')
 
 # Creating Connection Object
-conn = psycopg2.connect(dbname=ELE_DB_NAME, 
+conn = psycopg2.connect(dbname=ELE_DB_NAME,
                         user=ELE_DB_USER,
                         password=ELE_DB_PW,
                         host=ELE_DB_HOST)
@@ -29,7 +29,7 @@ conn = psycopg2.connect(dbname=ELE_DB_NAME,
 cursor = conn.cursor()
 
 
-# Defining "wrangle" Function 
+# Defining "wrangle" Function
 def wrangle(jsonin):
     # print(type(jsonin))
     if 'dead' in jsonin:
