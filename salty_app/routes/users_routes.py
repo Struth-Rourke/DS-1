@@ -24,20 +24,27 @@ conn = psycopg2.connect(dbname=ELE_DB_NAME,
 # Creating Cursor Object
 cursor = conn.cursor()
 
+# Cursor execution
 cursor.execute(
     '''
     SELECT DISTINCT author_name
     FROM salty_db_2
     GROUP BY author_name
     ''')
+# List of cursor.execute assigned to a variable
 authors = list(cursor.fetchall())
+# Instantiating empty list
 author_names = []
+# Counter
 counter = 0
+# For Loop for author in authors
 for author in authors:
     author = authors[counter][0]
     author_names.append(author)
     counter += 1
 
+
+# Closing Connection
 conn.close()
 # Instantiate new blueprint object
 users_routes = Blueprint("users_routes", __name__)

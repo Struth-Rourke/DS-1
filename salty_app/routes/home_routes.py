@@ -29,20 +29,20 @@ conn = psycopg2.connect(dbname=ELE_DB_NAME,
 # Creating Cursor Object
 cursor = conn.cursor()
 
+# Cursor Object
 cursor.execute(
     '''
     SELECT *
     FROM salty_db_2
     ''')
+# List of cursor.execute assigned to a variable
 comments = list(cursor.fetchall())
+# Setting comments variable to data variable
 data = comments
 
+
+# Closing Connection
 conn.close()
-# counter = 0
-# for comment in comments:
-#     comment = comments[counter]
-#     data.append(comment)
-#     counter += 1
 
 
 # Instantiate new blueprint object
