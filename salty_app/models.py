@@ -13,11 +13,11 @@ migrate = Migrate()
 class Comments(db.Model):
     # Configuring the attributes, and subsequent DB columns
     comment_id = db.Column(db.BigInteger, primary_key=True)
-    author_id = db.Column(db.BigInteger, db.ForeignKey("user.id"))
-    author_name = db.Column(db.String(128))
+    author_name = db.Column(db.String, db.ForeignKey("User.author_screen_name"))
     comment_text = db.Column(db.String)
-    salty_comment_score = db.Column(db.Float)
-
+    salty_comment_score_pos = db.Column(db.Float)
+    salty_comment_score_neg = db.Column(db.Float)
+    
     # bi-directional association with User model
     user = db.relationship("User", backref=db.backref("Comments", lazy=True))
 
@@ -25,7 +25,7 @@ class Comments(db.Model):
 # Defining new class "User": inherents db.model from SQLAlchemy above
 class User(db.Model):
     # Configuring attributes, and subsequent DB columns
-    id = db.Column(db.BigInteger, primary_key=True)
+    id = db.Column(db.BigInteger, serial_key=True)
     author_screen_name = db.Column(db.String(128), nullable=False)
     user_saltiness_score = db.Column(db.Integer)
     comment_count = db.Column(db.Integer)

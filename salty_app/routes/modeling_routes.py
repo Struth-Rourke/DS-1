@@ -8,3 +8,7 @@ modeling_routes = Blueprint("modeling_routes", __name__)
 @modeling_routes.route("/modeling")
 def index():
     return render_template()
+
+
+# TODO: Modeling information
+
