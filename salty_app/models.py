@@ -17,7 +17,7 @@ class Comments(db.Model):
     comment_text = db.Column(db.String)
     salty_comment_score_pos = db.Column(db.Float)
     salty_comment_score_neg = db.Column(db.Float)
-    
+
     # bi-directional association with User model
     user = db.relationship("User", backref=db.backref("Comments", lazy=True))
 
