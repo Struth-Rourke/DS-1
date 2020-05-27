@@ -8,25 +8,26 @@ db = SQLAlchemy()
 # Instantiating Migrate
 migrate = Migrate()
 
+
 # Defining new class "Tweets": inherents db.model from SQLAlchemy above
 class Comments(db.Model):
     # Configuring the attributes, and subsequent DB columns
     comment_id = db.Column(db.BigInteger, primary_key=True)
-    author_id = db.Column(db.BigInteger, db.ForeignKey("user.id"))
-    author_name = db.Column(db.String(128))
+    author_name = db.Column(db.String, db.ForeignKey("User.author_screen_name"))
     comment_text = db.Column(db.String)
-    salty_comment_score = db.Column(db.Float)
-
+    salty_comment_score_pos = db.Column(db.Float)
+    salty_comment_score_neg = db.Column(db.Float)
+    
     # bi-directional association with User model
     user = db.relationship("User", backref=db.backref("Comments", lazy=True))
 
+
 # Defining new class "User": inherents db.model from SQLAlchemy above
 class User(db.Model):
-    # Configuring attributes, and subsequent DB columns 
-    id = db.Column(db.BigInteger, primary_key=True)
+    # Configuring attributes, and subsequent DB columns
+    id = db.Column(db.BigInteger, serial_key=True)
     author_screen_name = db.Column(db.String(128), nullable=False)
-    comment_full_text = db.Column(db.String)
-    saltiness_rank = db.Column(db.Integer)
+    user_saltiness_score = db.Column(db.Integer)
     comment_count = db.Column(db.Integer)
     word_count = db.Column(db.Integer)
 
@@ -34,7 +35,7 @@ class User(db.Model):
 # Defining the parse_records function
 def parse_records(database_records):
     """
-    A helper method for converting a list of database record objects into a list 
+    A helper method for converting a list of database record objects into list
     of dictionaries, so they can be returned as JSON.
 
     Param: database_records (a list of db.Model instances)

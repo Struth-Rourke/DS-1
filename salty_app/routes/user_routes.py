@@ -3,12 +3,10 @@
 from flask import Blueprint, render_template
 
 # Instantiate new blueprint object
-home_routes = Blueprint("home_routes", __name__)
+user_routes = Blueprint("user_routes", __name__)
 
-@home_routes.route("/")
+@user_routes.route("/users")
 def index():
-    return render_template("prediction_form.html")
+    return render_template()
 
-@home_routes.route("/about")
-def about():
-    return "About me"
+# TODO: User information
