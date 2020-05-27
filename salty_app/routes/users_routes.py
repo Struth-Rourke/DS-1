@@ -29,6 +29,7 @@ cursor.execute(
     SELECT DISTINCT author_name
     FROM salty_db_2
     GROUP BY author_name
+    LIMIT 100
     ''')
 authors = list(cursor.fetchall())
 author_names = []
