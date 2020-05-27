@@ -20,7 +20,7 @@ def create_user_table(cursor, conn):
     conn.commit()
 
 
-# Defining "comment table" function 
+# Defining "comment table" function
 def create_comment_table(cursor, conn):
     print("-----------------")
 
