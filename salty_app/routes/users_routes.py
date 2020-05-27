@@ -2,7 +2,7 @@
 import os
 import psycopg2
 from psycopg2.extras import execute_values
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, jsonify
 from dotenv import load_dotenv
 
 # env

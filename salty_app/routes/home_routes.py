@@ -1,13 +1,8 @@
 # salty_app/routes/home_routes.py
-import requests
-import html
-import re
 import os
-import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
-from sqlalchemy import create_engine
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, jsonify
 from dotenv import load_dotenv
 
 # env

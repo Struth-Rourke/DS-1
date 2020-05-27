@@ -25,12 +25,11 @@ def create_app():
     # Migrates the app and DataBase
     migrate.init_app(app, db)
 
-
     # Registering the blueprints from the different routes
-    app.register_blueprint(home_routes) #> ("/home")
-    app.register_blueprint(modeling_routes) #> ("/modeling")
-    app.register_blueprint(stats_routes) #> ("/stats")
-    app.register_blueprint(users_routes) #> ("/user")
+    app.register_blueprint(home_routes)  # ("/home")
+    app.register_blueprint(modeling_routes)  # ("/modeling")
+    app.register_blueprint(stats_routes)  # ("/stats")
+    app.register_blueprint(users_routes)  # ("/user")
 
     # Returning / Running Flask App
     return app
