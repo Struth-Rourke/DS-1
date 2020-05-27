@@ -1,12 +1,7 @@
 # salty_app/routes/home_routes.py
-import requests
-import html
-import re
 import os
-import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
-from sqlalchemy import create_engine
 from flask import Blueprint, render_template, jsonify
 from dotenv import load_dotenv
 
@@ -31,20 +26,21 @@ cursor = conn.cursor()
 
 cursor.execute(
     '''
-    SELECT *
+    SELECT DISTINCT author_name
     FROM salty_db_2
+    GROUP BY author_name
     ''')
-comments = list(cursor.fetchall())
-data = []
+authors = list(cursor.fetchall())
+author_names = []
 counter = 0
-for comment in comments:
-    comment = comments[counter][0]
-    data.append(comment)
+for author in authors:
+    author = authors[counter][0]
+    author_names.append(author)
     counter += 1
 
 
 # Instantiate new blueprint object
-home_routes = Blueprint("home_routes", __name__)
-@home_routes.route("/home")
-def data():
-    return jsonify(data)
+users_routes = Blueprint("users_routes", __name__)
+@users_routes.route("/users")
+def users():
+    return jsonify(author_names)

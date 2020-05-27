@@ -29,13 +29,10 @@ def create_app():
     migrate.init_app(app, db)
 
     # Registering the blueprints from the different routes
-    app.register_blueprint(about_routes)
-    app.register_blueprint(home_routes)
-    app.register_blueprint(marketing_routes)
-    app.register_blueprint(modeling_routes)
-    app.register_blueprint(register_routes)
-    app.register_blueprint(stats_routes)
-    app.register_blueprint(user_routes)
+    app.register_blueprint(home_routes) #> ("/home")
+    app.register_blueprint(modeling_routes) #> ("/modeling")
+    app.register_blueprint(stats_routes) #> ("/stats")
+    app.register_blueprint(user_routes) #> ("/user")
 
     # Returning / Running Flask App
     return app
