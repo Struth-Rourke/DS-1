@@ -38,7 +38,7 @@ for author in authors:
     author_names.append(author)
     counter += 1
 
-
+conn.close()
 # Instantiate new blueprint object
 users_routes = Blueprint("users_routes", __name__)
 @users_routes.route("/users")

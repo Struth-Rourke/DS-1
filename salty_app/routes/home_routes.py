@@ -36,6 +36,8 @@ cursor.execute(
     ''')
 comments = list(cursor.fetchall())
 data = comments
+
+conn.close()
 # counter = 0
 # for comment in comments:
 #     comment = comments[counter]
