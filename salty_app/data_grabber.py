@@ -7,26 +7,29 @@ import psycopg2
 from psycopg2.extras import execute_values
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
+from salty_app.stats_routes import create_comment_table
 
-
+# env
 ENV_PATH = os.path.join(os.getcwd(), '.env')
 load_dotenv(ENV_PATH)
 
-
+# Elephant SQL -- PostgreSQL Credentials
 ELE_DB_USER = os.getenv('ELE_DB_USER')
 ELE_DB_NAME = os.getenv('ELE_DB_NAME')
 ELE_DB_PW = os.getenv('ELE_DB_PW')
 ELE_DB_HOST = os.getenv('ELE_DB_HOST')
 
-conn = psycopg2.connect(dbname=ELE_DB_NAME, 
+# Creating Connection Object
+conn = psycopg2.connect(dbname=ELE_DB_NAME,
                         user=ELE_DB_USER,
                         password=ELE_DB_PW,
                         host=ELE_DB_HOST)
 
+# Creating Cursor Object
 cursor = conn.cursor()
 
 
-
+# Defining "wrangle" Function
 def wrangle(jsonin):
     # print(type(jsonin))
     if 'dead' in jsonin:
@@ -86,16 +89,7 @@ while True:
             if item_json['type'] == "comment":
                 # print('adding to database')
                 # Check to make sure entry isn't in database already
-                db_query = '''
-                CREATE TABLE IF NOT EXISTS salty_db (
-                    id INT,
-                    author_screen_name VARCHAR,
-                    comment_full_text VARCHAR,
-                    PRIMARY KEY (id)
-                )
-                '''
-                cursor.execute(db_query)
-                conn.commit()
+                create_comment_table(cursor, conn)
 
                 query = f'''
                 SELECT
