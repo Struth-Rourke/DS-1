@@ -2,12 +2,10 @@ import requests
 import html
 import re
 import os
-import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
-from sqlalchemy import create_engine
 from dotenv import load_dotenv
-from sql_query_function import create_comment_table, populate_comment_table_query, create_user_table
+from sql_query_function import create_comment_table, populate_comment_table_query
 
 # env
 ENV_PATH = os.path.join(os.getcwd(), '.env')
@@ -40,7 +38,7 @@ def wrangle(jsonin):
     # get rid of html tags and quotes
     # regex code from:
     # https://stackoverflow.com/questions/9662346/python-code-to-remove-html-tags-from-a-string
-    
+
     # remove snippets of other people's comments in comments
     # do this before unescape to differentiate html tags from user
     # inputted ">"s
@@ -61,6 +59,7 @@ def wrangle(jsonin):
         return jsonin
     else:
         return {}
+
 
 # get input from user on which id to start from
 print('Remember: Ctrl+C will stop adding items to the database.')
@@ -93,6 +92,7 @@ while True:
                 create_comment_table(cursor, conn)
 
                 i, maxitem = populate_comment_table_query(cursor, conn, i, item_json, maxitem)
+
         maxitem-=1
     except KeyboardInterrupt:
         print(f'{i} records added to database.')

@@ -1,7 +1,32 @@
+import os
 import psycopg2
 from psycopg2.extras import execute_values
+from dotenv import load_dotenv
 
 
+# Defining "create_user_table" Function
+def conn_cursor_function():
+    ENV_PATH = os.path.join(os.getcwd(), '.env')
+    load_dotenv(ENV_PATH)
+
+    # Elephant SQL -- PostgreSQL Credentials
+    ELE_DB_USER = os.getenv('ELE_DB_USER')
+    ELE_DB_NAME = os.getenv('ELE_DB_NAME')
+    ELE_DB_PW = os.getenv('ELE_DB_PW')
+    ELE_DB_HOST = os.getenv('ELE_DB_HOST')
+
+    # Creating Connection Object
+    conn = psycopg2.connect(dbname=ELE_DB_NAME,
+                            user=ELE_DB_USER,
+                            password=ELE_DB_PW,
+                            host=ELE_DB_HOST)
+
+    # Creating Cursor Object
+    cursor = conn.cursor()
+    return conn, cursor
+
+
+# Defining "create_user_table" Function
 def create_user_table(cursor, conn):
     print("-----------------")
     print("CREATING TABLE IN THE DATABASE...")
@@ -20,7 +45,7 @@ def create_user_table(cursor, conn):
     conn.commit()
 
 
-# Defining "comment table" function 
+# Defining "create_comment_table" Function
 def create_comment_table(cursor, conn):
     print("-----------------")
 
@@ -38,6 +63,7 @@ def create_comment_table(cursor, conn):
     conn.commit()
 
 
+# Defining "populate_comment_table_query" Function
 def populate_comment_table_query(cursor, conn, i, item_json, maxitem):
     query = f'''
         SELECT
@@ -73,3 +99,41 @@ def populate_comment_table_query(cursor, conn, i, item_json, maxitem):
         # Alert the console
         print(f"WARNING: Duplicate entry {maxitem} found in database!")
     return i, maxitem
+
+
+# Defining "top_10_saltiest_users" Function
+def top_10_saltiest_users(cursor, conn):
+    top10_saltiest_users_query = '''
+        SELECT
+            author_name,
+            AVG(salty_comment_score_neg)
+        FROM salty_db_2
+        GROUP BY
+            author_name,
+            salty_comment_score_neg
+        ORDER BY salty_comment_score_neg DESC
+        LIMIT 10
+            '''
+    cursor.execute(top10_saltiest_users_query)
+    conn.commit()
+    conn.close()
+
+
+# Defining "populate_comment_table_query" Function
+def top_10_saltiest_comments(cursor, conn):
+    top10_saltiest_comments_query = '''
+        SELECT
+            author_name,
+            comment_text,
+            salty_comment_score_neg
+        FROM salty_db_2
+        GROUP BY
+            author_name,
+            comment_text,
+            salty_comment_score_neg
+        ORDER BY salty_comment_score_neg DESC
+        LIMIT 10
+            '''
+    cursor.execute(top10_saltiest_comments_query)
+    conn.commit()
+    conn.close()

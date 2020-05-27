@@ -2,13 +2,10 @@ import os
 from flask import Flask
 from dotenv import load_dotenv
 from salty_app.models import db, migrate
-from salty_app.routes.about_routes import about_routes
 from salty_app.routes.home_routes import home_routes
-from salty_app.routes.marketing_routes import marketing_routes
 from salty_app.routes.modeling_routes import modeling_routes
-from salty_app.routes.register_routes import register_routes
 from salty_app.routes.stats_routes import stats_routes
-from salty_app.routes.user_routes import user_routes
+from salty_app.routes.users_routes import users_routes
 
 
 # Creating DataBase name in the current directory -- using relative filepath
@@ -29,13 +26,10 @@ def create_app():
     migrate.init_app(app, db)
 
     # Registering the blueprints from the different routes
-    app.register_blueprint(about_routes)
-    app.register_blueprint(home_routes)
-    app.register_blueprint(marketing_routes)
-    app.register_blueprint(modeling_routes)
-    app.register_blueprint(register_routes)
-    app.register_blueprint(stats_routes)
-    app.register_blueprint(user_routes)
+    app.register_blueprint(home_routes)  # ("/home")
+    app.register_blueprint(modeling_routes)  # ("/modeling")
+    app.register_blueprint(stats_routes)  # ("/stats")
+    app.register_blueprint(users_routes)  # ("/user")
 
     # Returning / Running Flask App
     return app
