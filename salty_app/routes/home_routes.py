@@ -35,16 +35,17 @@ cursor.execute(
     FROM salty_db_2
     ''')
 comments = list(cursor.fetchall())
-data = []
-counter = 0
-for comment in comments:
-    comment = comments[counter][0]
-    data.append(comment)
-    counter += 1
+data = comments
+# counter = 0
+# for comment in comments:
+#     comment = comments[counter]
+#     data.append(comment)
+#     counter += 1
 
 
 # Instantiate new blueprint object
 home_routes = Blueprint("home_routes", __name__)
 @home_routes.route("/home")
-def data():
+def data_function():
+    print("DATA Type:", type(data))
     return jsonify(data)
