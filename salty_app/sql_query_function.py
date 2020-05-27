@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2.extras import execute_values
 
 
+# Defining "create_user_table" Function
 def create_user_table(cursor, conn):
     print("-----------------")
     print("CREATING TABLE IN THE DATABASE...")
@@ -20,7 +21,7 @@ def create_user_table(cursor, conn):
     conn.commit()
 
 
-# Defining "comment table" function 
+# Defining "create_comment_table" Function
 def create_comment_table(cursor, conn):
     print("-----------------")
 
@@ -38,6 +39,7 @@ def create_comment_table(cursor, conn):
     conn.commit()
 
 
+# Defining "populate_comment_table_query" Function
 def populate_comment_table_query(cursor, conn, i, item_json, maxitem):
     query = f'''
         SELECT
