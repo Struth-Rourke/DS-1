@@ -7,7 +7,7 @@ import psycopg2
 from psycopg2.extras import execute_values
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
-from salty_app.stats_routes import create_comment_table
+from sql_query_function import create_comment_table, populate_comment_table_query, create_user_table
 
 # env
 ENV_PATH = os.path.join(os.getcwd(), '.env')
@@ -89,41 +89,10 @@ while True:
             if item_json['type'] == "comment":
                 # print('adding to database')
                 # Check to make sure entry isn't in database already
+                # create_user_table(cursor, conn)
                 create_comment_table(cursor, conn)
 
-                query = f'''
-                SELECT
-                    id
-                FROM salty_db
-                WHERE id={maxitem}
-                '''
-                cursor.execute(query)
-                record = cursor.fetchone()
-                if record is None:
-                    print(f'Adding comment with id {maxitem} to database')
-                    # The record isn't found in the database
-                    # add the record to the database
-                    query = '''
-                    INSERT INTO salty_db (id, author_screen_name, comment_full_text)
-                    VALUES %s
-                    '''
-                    execute_values(
-                        cursor,
-                        query,
-                        [
-                            (
-                                str(item_json['id'])
-                                ,item_json['by']
-                                ,item_json['text']
-                            )
-                        ]
-                    )
-                    conn.commit()
-                    i+=1
-                else:
-                    # The record is already in the database
-                    # Alert the console
-                    print(f"WARNING: Duplicate entry {maxitem} found in database!")
+                i, maxitem = populate_comment_table_query(cursor, conn, i, item_json, maxitem)
         maxitem-=1
     except KeyboardInterrupt:
         print(f'{i} records added to database.')
