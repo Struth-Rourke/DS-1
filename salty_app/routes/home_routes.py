@@ -1,15 +1,11 @@
 # salty_app/routes/home_routes.py
-import os
-import pandas as pd
-import psycopg2
-from psycopg2.extras import execute_values
-from flask import Blueprint, jsonify
-from dotenv import load_dotenv
+from flask import Blueprint
 from salty_app.sql_query_function import fetch_query_comments, fetch_query
 
 
 # Instantiate new blueprint object
 home_routes = Blueprint("home_routes", __name__)
+
 
 # "home" Route
 @home_routes.route("/home")
@@ -28,25 +24,25 @@ def data_function_1():
     query = """
     SELECT *
     FROM (
-	    SELECT
- 	    	AVG(salty_comment_score_neg) AS avg_saltiness_score,
- 	    	author_name,
- 	    	COUNT(DISTINCT comment_id) AS comment_count
- 	    FROM
- 	    	salty_db_2
- 	    WHERE
- 	    	salty_comment_score_neg > 0
- 	    GROUP BY
- 	    	author_name
+        SELECT
+            AVG(salty_comment_score_neg) AS avg_saltiness_score,
+            author_name,
+            COUNT(DISTINCT comment_id) AS comment_count
+        FROM
+            salty_db_2
+        WHERE
+            salty_comment_score_neg > 0
+        GROUP BY
+            author_name
         ORDER BY
             avg_saltiness_score DESC) AS comment_query
     WHERE
         comment_count > 3
     LIMIT 20
     """
-    
+
     columns = ['avg_saltiness_score', 'author_name', 'comment_count']
-    
+
     return fetch_query(query, columns)
 
 
@@ -56,16 +52,16 @@ def data_function_2():
     query = """
     SELECT *
     FROM (
-	    SELECT
- 	    	AVG(salty_comment_score_pos) AS avg_sweetness_score,
- 	    	author_name,
- 	    	COUNT(DISTINCT comment_id) AS comment_count
- 	    FROM
- 	    	salty_db_2
- 	    WHERE
- 	    	salty_comment_score_pos > 0
- 	    GROUP BY
- 	    	author_name
+        SELECT
+            AVG(salty_comment_score_pos) AS avg_sweetness_score,
+            author_name,
+            COUNT(DISTINCT comment_id) AS comment_count
+        FROM
+            salty_db_2
+        WHERE
+            salty_comment_score_pos > 0
+        GROUP BY
+            author_name
         ORDER BY
             avg_sweetness_score DESC) AS comment_query
     WHERE
@@ -83,8 +79,8 @@ def data_function_2():
 def data_function_3():
     query = """
     SELECT
- 	    COUNT(DISTINCT comment_id) as comment_count,
- 	    author_name
+        COUNT(DISTINCT comment_id) as comment_count,
+        author_name
     FROM salty_db_2
     GROUP BY author_name
     ORDER BY comment_count DESC
