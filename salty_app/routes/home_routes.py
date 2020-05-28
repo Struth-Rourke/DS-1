@@ -28,25 +28,25 @@ def data_function_1():
     query = """
     SELECT *
     FROM (
-	    SELECT
- 	    	AVG(salty_comment_score_neg) AS avg_saltiness_score,
- 	    	author_name,
- 	    	COUNT(DISTINCT comment_id) AS comment_count
- 	    FROM
- 	    	salty_db_2
- 	    WHERE
- 	    	salty_comment_score_neg > 0
- 	    GROUP BY
- 	    	author_name
+        SELECT
+            AVG(salty_comment_score_neg) AS avg_saltiness_score,
+            author_name,
+            COUNT(DISTINCT comment_id) AS comment_count
+        FROM
+            salty_db_2
+        WHERE
+            salty_comment_score_neg > 0
+        GROUP BY
+            author_name
         ORDER BY
             avg_saltiness_score DESC) AS comment_query
     WHERE
         comment_count > 3
     LIMIT 20
     """
-    
+
     columns = ['avg_saltiness_score', 'author_name', 'comment_count']
-    
+
     return fetch_query(query, columns)
 
 
@@ -56,16 +56,16 @@ def data_function_2():
     query = """
     SELECT *
     FROM (
-	    SELECT
- 	    	AVG(salty_comment_score_pos) AS avg_sweetness_score,
- 	    	author_name,
- 	    	COUNT(DISTINCT comment_id) AS comment_count
- 	    FROM
- 	    	salty_db_2
- 	    WHERE
- 	    	salty_comment_score_pos > 0
- 	    GROUP BY
- 	    	author_name
+        SELECT
+            AVG(salty_comment_score_pos) AS avg_sweetness_score,
+            author_name,
+            COUNT(DISTINCT comment_id) AS comment_count
+        FROM
+            salty_db_2
+        WHERE
+            salty_comment_score_pos > 0
+        GROUP BY
+            author_name
         ORDER BY
             avg_sweetness_score DESC) AS comment_query
     WHERE
@@ -83,8 +83,8 @@ def data_function_2():
 def data_function_3():
     query = """
     SELECT
- 	    COUNT(DISTINCT comment_id) as comment_count,
- 	    author_name
+        COUNT(DISTINCT comment_id) as comment_count,
+        author_name
     FROM salty_db_2
     GROUP BY author_name
     ORDER BY comment_count DESC
