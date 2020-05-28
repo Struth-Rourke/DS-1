@@ -137,3 +137,87 @@ def top_10_saltiest_comments(cursor, conn):
     cursor.execute(top10_saltiest_comments_query)
     conn.commit()
     conn.close()
+
+
+def fetch_query_comments(query):
+    """
+    Creates a connection to a database, returns query from comments table
+    as a list of dictionaries
+    Input: query = string
+    """
+    # Elephant SQL -- PostgreSQL Credentials
+    ELE_DB_USER = os.getenv('ELE_DB_USER')
+    ELE_DB_NAME = os.getenv('ELE_DB_NAME')
+    ELE_DB_PW = os.getenv('ELE_DB_PW')
+    ELE_DB_HOST = os.getenv('ELE_DB_HOST')
+
+    # Creating Connection Object
+    conn = psycopg2.connect(dbname=ELE_DB_NAME,
+                            user=ELE_DB_USER,
+                            password=ELE_DB_PW,
+                            host=ELE_DB_HOST
+                            )
+    # Creating Cursor Object
+    cursor = conn.cursor()
+    # Fetch comments query
+    query = query
+    # Execute query
+    cursor.execute(query)
+    # Query results
+    comments = list(cursor.fetchall())
+    # Key-value pair names for df columns
+    columns = ["comment_id",
+               "username",
+               "comment_text",
+               "score_pos",
+               "score_neg"]
+    # List of tuples to DF
+    df = pd.DataFrame(comments, columns=columns)
+    print(type(df))
+    # DF to dictionary
+    pairs = df.to_json(orient='records')
+    print(type(pairs))
+    # Closing Connection
+    conn.close()
+
+    return pairs
+
+
+def fetch_query_user(query):
+    """
+    Creates a connection to a database, returns query from users table
+    as a list of dictionaries
+    Input: query = string
+    """
+    # Elephant SQL -- PostgreSQL Credentials
+    ELE_DB_USER = os.getenv('ELE_DB_USER')
+    ELE_DB_NAME = os.getenv('ELE_DB_NAME')
+    ELE_DB_PW = os.getenv('ELE_DB_PW')
+    ELE_DB_HOST = os.getenv('ELE_DB_HOST')
+
+    # Creating Connection Object
+    conn = psycopg2.connect(dbname=ELE_DB_NAME,
+                            user=ELE_DB_USER,
+                            password=ELE_DB_PW,
+                            host=ELE_DB_HOST
+                            )
+    # Creating Cursor Object
+    cursor = conn.cursor()
+    # Fetch comments query
+    query = query
+    # Execute query
+    cursor.execute(query)
+    # Query results
+    comments = list(cursor.fetchall())
+    # Key-value pair names for df columns
+    columns = ["TODO"]
+    # List of tuples to DF
+    df = pd.DataFrame(comments, columns=columns)
+    print(type(df))
+    # DF to dictionary
+    pairs = df.to_json(orient='records')
+    print(type(pairs))
+    # Closing Connection
+    conn.close()
+
+    return pairs
