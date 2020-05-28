@@ -4,6 +4,7 @@ import psycopg2
 from psycopg2.extras import execute_values
 from flask import Blueprint, jsonify
 from dotenv import load_dotenv
+import pandas as pd
 
 # env
 ENV_PATH = os.path.join(os.getcwd(), '.env')
@@ -15,61 +16,48 @@ DB_NAME = os.getenv('DB_NAME')
 DB_PW = os.getenv('DB_PW')
 DB_HOST = os.getenv('DB_HOST')
 
-# Creating Connection Object
-conn = psycopg2.connect(dbname=DB_NAME,
-                        user=DB_USER,
-                        password=DB_PW,
-                        host=DB_HOST)
 
-# Creating Cursor Object
-cursor = conn.cursor()
+def fetch_query_comments(query):
+    # Creating Connection Object
+    conn = psycopg2.connect(dbname=DB_NAME,
+                            user=DB_USER,
+                            password=DB_PW,
+                            host=DB_HOST)
+    # Creating Cursor Object
+    cursor = conn.cursor()
+    # Fetch comments query
+    query = query
+    # Execute query
+    cursor.execute(query)
+    # Query results
+    comments = list(cursor.fetchall())
+    # Key-value pair names for df columns
+    columns = ["comment_id",
+               "username",
+               "comment_text",
+               "score_pos",
+               "score_neg"]
+    # List of tuples to DF
+    df = pd.DataFrame(comments, columns=columns)
+    print(type(df))
+    # DF to dictionary
+    pairs = df.to_json(orient='records')
+    print(type(pairs))
+    # Closing Connection
+    conn.close()
 
-# Cursor Object
-cursor.execute(
-    '''
-    SELECT *
-    FROM comments
-    ''')
-# List of cursor.execute assigned to a variable
-comments = list(cursor.fetchall())
-# Setting comments variable to data variable
-data = comments
-
-
-# Closing Connection
-conn.close()
+    return pairs
 
 
 # Instantiate new blueprint object
 home_routes_test = Blueprint("home_routes_test", __name__)
 @home_routes_test.route("/home")
 def data_function():
-    print("DATA Type:", type(data))
-    counter = 0
-    pairs = []
-    for a,b,c,d,e in data:
-        a = data[counter][0]
-        b = data[counter][1]
-        c = data[counter][2]
-        d = data[counter][3]
-        e = data[counter][4]
-        pairs.append({"comment id":a})
-        pairs.append({"username":b})
-        pairs.append({"comment text":c})
-        pairs.append({"score pos":d})
-        pairs.append({"score neg":e})
-        counter += 1
-        # breakpoint()
-        return jsonify(pairs) #> gets list of dictionaries, but only 1 ...
-    
-    
-    # return jsonify({
-    #     "comment id":a,
-    #     "username":b,
-    #     "comment text":c,
-    #     "score pos":d,
-    #     "score neg":e
-    #     })
+    query = """
+    SELECT *
+    FROM comments
+    """
+    return fetch_query_comments(query)
 
 
 
