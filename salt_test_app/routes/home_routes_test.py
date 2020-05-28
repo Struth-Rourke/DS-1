@@ -45,7 +45,42 @@ home_routes_test = Blueprint("home_routes_test", __name__)
 @home_routes_test.route("/home")
 def data_function():
     print("DATA Type:", type(data))
-    return jsonify(data)
+    counter = 0
+    pairs = []
+    for a,b,c,d,e in data:
+        a = data[counter][0]
+        b = data[counter][1]
+        c = data[counter][2]
+        d = data[counter][3]
+        e = data[counter][4]
+        pairs.append({"comment id":a})
+        pairs.append({"username":b})
+        pairs.append({"comment text":c})
+        pairs.append({"score pos":d})
+        pairs.append({"score neg":e})
+        counter += 1
+        # breakpoint()
+        return jsonify(pairs) #> gets list of dictionaries, but only 1 ...
+    
+    
+    # return jsonify({
+    #     "comment id":a,
+    #     "username":b,
+    #     "comment text":c,
+    #     "score pos":d,
+    #     "score neg":e
+    #     })
+
+
+
+### NOTES ON DATA:
+# type(data): list
+# type(data[0]): tuple
+# data[0][0]: comment id
+# data[0][1]: username
+# data[0][2]: comment text
+# data[0][3]: score pos
+# data[0][4]: score neg
 
 
 ####################### Queries: #######################
@@ -134,6 +169,8 @@ def data_function():
 # )
 
 # #> Output is 2.35
+
+
 
 # # TOP TEN SALTIEST COMMENTERS (AT LEAST 3 COMMENTS MADE) - 
 
