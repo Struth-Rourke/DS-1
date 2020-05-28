@@ -3,28 +3,9 @@ import html
 import re
 import os
 import psycopg2
-from psycopg2.extras import execute_values
 from dotenv import load_dotenv
-from sql_query_function import create_comment_table, populate_comment_table_query
-
-# env
-ENV_PATH = os.path.join(os.getcwd(), '.env')
-load_dotenv(ENV_PATH)
-
-# Elephant SQL -- PostgreSQL Credentials
-ELE_DB_USER = os.getenv('ELE_DB_USER')
-ELE_DB_NAME = os.getenv('ELE_DB_NAME')
-ELE_DB_PW = os.getenv('ELE_DB_PW')
-ELE_DB_HOST = os.getenv('ELE_DB_HOST')
-
-# Creating Connection Object
-conn = psycopg2.connect(dbname=ELE_DB_NAME,
-                        user=ELE_DB_USER,
-                        password=ELE_DB_PW,
-                        host=ELE_DB_HOST)
-
-# Creating Cursor Object
-cursor = conn.cursor()
+from sql_query_function import create_comment_table
+from sql_query_function import populate_comment_table_query
 
 
 # Defining "wrangle" Function
@@ -61,39 +42,63 @@ def wrangle(jsonin):
         return {}
 
 
-# get input from user on which id to start from
-print('Remember: Ctrl+C will stop adding items to the database.')
-maxitem = input('What ID to start from? (leave blank to use latest)')
-if not maxitem:
-    url = "https://hacker-news.firebaseio.com/v0/maxitem.json"
-    maxitem = requests.get(url)
-    maxitem = maxitem.json()
-    maxitem = int(maxitem)
-else:
-    maxitem = int(maxitem)
+if __name__ == "__main__":
+    # env
+    ENV_PATH = os.path.join(os.getcwd(), '.env')
+    load_dotenv(ENV_PATH)
 
-i = 0
-while True:
-    try:
-        url = f'https://hacker-news.firebaseio.com/v0/item/{maxitem}.json'
-        item = requests.get(url)
-        item_json = item.json()
-        if not isinstance(item_json, dict):
+    # Elephant SQL -- PostgreSQL Credentials
+    ELE_DB_USER = os.getenv('ELE_DB_USER')
+    ELE_DB_NAME = os.getenv('ELE_DB_NAME')
+    ELE_DB_PW = os.getenv('ELE_DB_PW')
+    ELE_DB_HOST = os.getenv('ELE_DB_HOST')
+
+    # Creating Connection Object
+    conn = psycopg2.connect(dbname=ELE_DB_NAME,
+                            user=ELE_DB_USER,
+                            password=ELE_DB_PW,
+                            host=ELE_DB_HOST)
+
+    # Creating Cursor Object
+    cursor = conn.cursor()
+
+    # Get input from user on which id to start from
+    print('Remember: Ctrl+C will stop adding items to the database.')
+    maxitem = input('What ID to start from? (leave blank to use latest)')
+    if not maxitem:
+        url = "https://hacker-news.firebaseio.com/v0/maxitem.json"
+        maxitem = requests.get(url)
+        maxitem = maxitem.json()
+        maxitem = int(maxitem)
+    else:
+        maxitem = int(maxitem)
+
+    i = 0
+    while True:
+        try:
+            url = f'https://hacker-news.firebaseio.com/v0/item/{maxitem}.json'
+            item = requests.get(url)
+            item_json = item.json()
+            if not isinstance(item_json, dict):
+                maxitem -= 1
+                continue
+            # Catch in case comment doesn't have text for some reason
+            item_json = wrangle(item_json)
+            # print(item_json)
+            if 'type' in item_json:
+                if item_json['type'] == "comment":
+                    # print('adding to database')
+                    # Check to make sure entry isn't in database already
+                    # create_user_table(cursor, conn)
+                    create_comment_table(cursor, conn)
+
+                    i, maxitem = populate_comment_table_query(cursor,
+                                                              conn,
+                                                              i,
+                                                              item_json,
+                                                              maxitem)
+
             maxitem -= 1
-            continue
-        # Catch in case comment doesn't have text for some reason
-        item_json = wrangle(item_json)
-        # print(item_json)
-        if 'type' in item_json:
-            if item_json['type'] == "comment":
-                # print('adding to database')
-                # Check to make sure entry isn't in database already
-                # create_user_table(cursor, conn)
-                create_comment_table(cursor, conn)
-
-                i, maxitem = populate_comment_table_query(cursor, conn, i, item_json, maxitem)
-
-        maxitem-=1
-    except KeyboardInterrupt:
-        print(f'{i} records added to database.')
-        break
+        except KeyboardInterrupt:
+            print(f'{i} records added to database.')
+            break
