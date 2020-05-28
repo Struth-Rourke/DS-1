@@ -1,48 +1,27 @@
 import os
+import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 
 
 # Defining "create_user_table" Function
-def conn_cursor_function():
-    ENV_PATH = os.path.join(os.getcwd(), '.env')
-    load_dotenv(ENV_PATH)
+# def create_user_table(cursor, conn):
+#     print("-----------------")
+#     print("CREATING TABLE IN THE DATABASE...")
 
-    # Elephant SQL -- PostgreSQL Credentials
-    ELE_DB_USER = os.getenv('ELE_DB_USER')
-    ELE_DB_NAME = os.getenv('ELE_DB_NAME')
-    ELE_DB_PW = os.getenv('ELE_DB_PW')
-    ELE_DB_HOST = os.getenv('ELE_DB_HOST')
-
-    # Creating Connection Object
-    conn = psycopg2.connect(dbname=ELE_DB_NAME,
-                            user=ELE_DB_USER,
-                            password=ELE_DB_PW,
-                            host=ELE_DB_HOST)
-
-    # Creating Cursor Object
-    cursor = conn.cursor()
-    return conn, cursor
-
-
-# Defining "create_user_table" Function
-def create_user_table(cursor, conn):
-    print("-----------------")
-    print("CREATING TABLE IN THE DATABASE...")
-
-    create_table_query = '''
-        CREATE TABLE IF NOT EXISTS salty_user_db (
-            id INT,
-            author_screen_name VARCHAR,
-            user_saltiness_score INT,
-            comment_count INT,
-            word_count INT,
-            PRIMARY KEY (id)
-            )
-            '''
-    cursor.execute(create_table_query)
-    conn.commit()
+#     create_table_query = '''
+#         CREATE TABLE IF NOT EXISTS salty_user_db (
+#             id INT,
+#             author_screen_name VARCHAR,
+#             user_saltiness_score INT,
+#             comment_count INT,
+#             word_count INT,
+#             PRIMARY KEY (id)
+#             )
+#             '''
+#     cursor.execute(create_table_query)
+#     conn.commit()
 
 
 # Defining "create_comment_table" Function
@@ -101,44 +80,6 @@ def populate_comment_table_query(cursor, conn, i, item_json, maxitem):
     return i, maxitem
 
 
-# Defining "top_10_saltiest_users" Function
-def top_10_saltiest_users(cursor, conn):
-    top10_saltiest_users_query = '''
-        SELECT
-            author_name,
-            AVG(salty_comment_score_neg)
-        FROM salty_db_2
-        GROUP BY
-            author_name,
-            salty_comment_score_neg
-        ORDER BY salty_comment_score_neg DESC
-        LIMIT 10
-            '''
-    cursor.execute(top10_saltiest_users_query)
-    conn.commit()
-    conn.close()
-
-
-# Defining "populate_comment_table_query" Function
-def top_10_saltiest_comments(cursor, conn):
-    top10_saltiest_comments_query = '''
-        SELECT
-            author_name,
-            comment_text,
-            salty_comment_score_neg
-        FROM salty_db_2
-        GROUP BY
-            author_name,
-            comment_text,
-            salty_comment_score_neg
-        ORDER BY salty_comment_score_neg DESC
-        LIMIT 10
-            '''
-    cursor.execute(top10_saltiest_comments_query)
-    conn.commit()
-    conn.close()
-
-
 def fetch_query_comments(query):
     """
     Creates a connection to a database, returns query from comments table
@@ -183,7 +124,7 @@ def fetch_query_comments(query):
     return pairs
 
 
-def fetch_query_user(query):
+def fetch_query(query, columns):
     """
     Creates a connection to a database, returns query from users table
     as a list of dictionaries
@@ -210,7 +151,7 @@ def fetch_query_user(query):
     # Query results
     comments = list(cursor.fetchall())
     # Key-value pair names for df columns
-    columns = ["TODO"]
+    columns = columns
     # List of tuples to DF
     df = pd.DataFrame(comments, columns=columns)
     print(type(df))

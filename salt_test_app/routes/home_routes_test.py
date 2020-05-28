@@ -160,17 +160,17 @@ def data_function():
 
 
 
-# # TOP TEN SALTIEST COMMENTERS (AT LEAST 3 COMMENTS MADE) - 
+# # TOP TEN SALTIEST COMMENTERS (AT LEAST 3 COMMENTS MADE) -
 
 # cursor.execute(
 #     '''
 #     SELECT *
-#     FROM (	
-#         SELECT 
+#     FROM (
+#         SELECT
 #             AVG(salty_comment_score_neg) as avg_salty_score,
 #             author_name,
 #             COUNT (DISTINCT comment_id) as comment_count
-#         from salty_db_2
+#         FROM salty_db_2
 #         WHERE salty_comment_score_neg > 0
 #         GROUP BY author_name
 #         ORDER BY avg_salty_score DESC
@@ -180,7 +180,7 @@ def data_function():
 #     '''
 # )
 
-# #> This output includes avg salty score, author name, and comment 
-# # count (greater than 2, since avg num of comments is 2.35). 
-# # For reference, highest avg saltiness score here was 0.318 from 
+# #> This output includes avg salty score, author name, and comment
+# # count (greater than 2, since avg num of comments is 2.35).
+# # For reference, highest avg saltiness score here was 0.318 from
 # # Chris2048 with 3 comments
