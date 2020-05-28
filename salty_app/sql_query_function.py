@@ -3,25 +3,7 @@ import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
-
-
-# Defining "create_user_table" Function
-# def create_user_table(cursor, conn):
-#     print("-----------------")
-#     print("CREATING TABLE IN THE DATABASE...")
-
-#     create_table_query = '''
-#         CREATE TABLE IF NOT EXISTS salty_user_db (
-#             id INT,
-#             author_screen_name VARCHAR,
-#             user_saltiness_score INT,
-#             comment_count INT,
-#             word_count INT,
-#             PRIMARY KEY (id)
-#             )
-#             '''
-#     cursor.execute(create_table_query)
-#     conn.commit()
+load_dotenv()
 
 
 # Defining "create_comment_table" Function
@@ -65,9 +47,9 @@ def populate_comment_table_query(cursor, conn, i, item_json, maxitem):
             query,
             [
                 (
-                    str(item_json['id'])
-                    ,item_json['by']
-                    ,item_json['text']
+                    str(item_json['id']),
+                    item_json['by'],
+                    item_json['text']
                 )
             ]
         )
