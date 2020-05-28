@@ -51,3 +51,35 @@ users_routes = Blueprint("users_routes", __name__)
 @users_routes.route("/users")
 def users():
     return jsonify(author_names)
+
+
+
+
+
+
+
+top10_saltiest_users_query = '''
+        SELECT
+            author_name,
+            AVG(salty_comment_score_neg)
+        FROM salty_db_2
+        GROUP BY
+            author_name,
+            salty_comment_score_neg
+        ORDER BY salty_comment_score_neg DESC
+        LIMIT 10
+            '''
+
+top10_saltiest_comments_query = '''
+        SELECT
+            author_name,
+            comment_text,
+            salty_comment_score_neg
+        FROM salty_db_2
+        GROUP BY
+            author_name,
+            comment_text,
+            salty_comment_score_neg
+        ORDER BY salty_comment_score_neg DESC
+        LIMIT 100
+            '''
