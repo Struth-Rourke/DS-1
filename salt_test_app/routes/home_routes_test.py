@@ -51,6 +51,49 @@ def fetch_query_comments(query):
 
 # Instantiate new blueprint object
 home_routes_test = Blueprint("home_routes_test", __name__)
+
+# Index Route
+@home_routes_test.route("/")
+def index():
+    return """<xmp>
+    WELCOME TO SALTIEST!
+    \n
+    YOU ARE CURRENTLY IN THE DATA LANDING PAGE. SEE BELOW FOR RETRIEVAL INSTRUCTIONS.
+    \n
+    \n
+    \n
+    VISIT THE FOLLOWING ADDRESSES TO RETRIEVE KEY VALUE PAIR DATA(Local):
+    \n
+    http://localhost:5000/home
+    \n
+    http://localhost:5000/top20_saltiest_users
+    \n
+    http://localhost:5000/top20_sweetest_users
+    \n
+    http://localhost:5000/top10_commenters
+    \n
+    http://localhost:5000/top100_salty_comments
+    \n
+    http://localhost:5000/top100_sweetest_comments
+    \n
+    \n
+    \n
+    VISIT THE FOLLOWING ADDRESSES TO RETRIEVE KEY VALUE PAIR DATA(Heroku):
+    \n
+    https://saltyapp.herokuapp.com/home
+    \n
+    https://saltyapp.herokuapp.com/top20_saltiest_users
+    \n
+    https://saltyapp.herokuapp.com/top20_sweetest_users
+    \n
+    https://saltyapp.herokuapp.com/top10_commenters
+    \n
+    https://saltyapp.herokuapp.com/top100_salty_comments
+    \n
+    https://saltyapp.herokuapp.com/top100_sweetest_comments
+    </xmp>"""
+    
+
 @home_routes_test.route("/home")
 def data_function():
     query = """
