@@ -1,48 +1,124 @@
 # salty_app/routes/home_routes.py
 import os
+import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
 from flask import Blueprint, jsonify
 from dotenv import load_dotenv
-
-# env
-ENV_PATH = os.path.join(os.getcwd(), '.env')
-load_dotenv(ENV_PATH)
-
-# Elephant SQL -- PostgreSQL Credentials
-ELE_DB_USER = os.getenv('ELE_DB_USER')
-ELE_DB_NAME = os.getenv('ELE_DB_NAME')
-ELE_DB_PW = os.getenv('ELE_DB_PW')
-ELE_DB_HOST = os.getenv('ELE_DB_HOST')
-
-# Creating Connection Object
-conn = psycopg2.connect(dbname=ELE_DB_NAME,
-                        user=ELE_DB_USER,
-                        password=ELE_DB_PW,
-                        host=ELE_DB_HOST)
-
-# Creating Cursor Object
-cursor = conn.cursor()
-
-# Cursor Object
-cursor.execute(
-    '''
-    SELECT *
-    FROM salty_db_2
-    ''')
-# List of cursor.execute assigned to a variable
-comments = list(cursor.fetchall())
-# Setting comments variable to data variable
-data = comments
-
-
-# Closing Connection
-conn.close()
+from salty_app.sql_query_function import fetch_query_comments, fetch_query
 
 
 # Instantiate new blueprint object
 home_routes = Blueprint("home_routes", __name__)
+
+# "home" Route
 @home_routes.route("/home")
 def data_function():
-    print("DATA Type:", type(data))
-    return jsonify(data)
+    query = """
+    SELECT *
+    FROM salty_db_2
+    """
+
+    return fetch_query_comments(query)
+
+
+# "top20_saltiest_users" Route
+@home_routes.route("/top20_saltiest_users")
+def data_function_1():
+    query = """
+    SELECT *
+    FROM (
+	    SELECT
+ 	    	AVG(salty_comment_score_neg) AS avg_saltiness_score,
+ 	    	author_name,
+ 	    	COUNT(DISTINCT comment_id) AS comment_count
+ 	    FROM
+ 	    	salty_db_2
+ 	    WHERE
+ 	    	salty_comment_score_neg > 0
+ 	    GROUP BY
+ 	    	author_name
+        ORDER BY
+            avg_saltiness_score DESC) AS comment_query
+    WHERE
+        comment_count > 3
+    LIMIT 20
+    """
+    
+    columns = ['avg_saltiness_score', 'author_name', 'comment_count']
+    
+    return fetch_query(query, columns)
+
+
+# "top20_saltiest_users" Route
+@home_routes.route("/top20_sweetest_users")
+def data_function_2():
+    query = """
+    SELECT *
+    FROM (
+	    SELECT
+ 	    	AVG(salty_comment_score_pos) AS avg_sweetness_score,
+ 	    	author_name,
+ 	    	COUNT(DISTINCT comment_id) AS comment_count
+ 	    FROM
+ 	    	salty_db_2
+ 	    WHERE
+ 	    	salty_comment_score_pos > 0
+ 	    GROUP BY
+ 	    	author_name
+        ORDER BY
+            avg_sweetness_score DESC) AS comment_query
+    WHERE
+        comment_count > 3
+    LIMIT 20
+    """
+
+    columns = ['avg_sweetness_score', 'author_name', 'comment_count']
+
+    return fetch_query(query, columns)
+
+
+# "top10_commenters" Route
+@home_routes.route("/top10_commenters")
+def data_function_3():
+    query = """
+    SELECT
+ 	    COUNT(DISTINCT comment_id) as comment_count,
+ 	    author_name
+    FROM salty_db_2
+    GROUP BY author_name
+    ORDER BY comment_count DESC
+    LIMIT 10
+    """
+
+    columns = ['comment_count', 'author_name']
+
+    return fetch_query(query, columns)
+
+
+# "top100_salty_comments" Route
+@home_routes.route("/top100_salty_comments")
+def data_function_4():
+    query = """
+    SELECT *
+    FROM salty_db_2
+    WHERE salty_comment_score_neg > 0
+    ORDER BY salty_comment_score_neg DESC
+    LIMIT 100
+    """
+
+    return fetch_query_comments(query)
+
+
+# "top100_sweetest_comments" Route
+@home_routes.route("/top100_sweetest_comments")
+def data_function_5():
+    query = """
+    SELECT *
+    FROM salty_db_2
+    WHERE salty_comment_score_pos > 0
+    ORDER BY salty_comment_score_pos DESC
+    LIMIT 100
+    """
+
+    return fetch_query_comments(query)
