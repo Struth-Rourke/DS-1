@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
@@ -132,7 +133,7 @@ def top_10_saltiest_comments(cursor, conn):
             comment_text,
             salty_comment_score_neg
         ORDER BY salty_comment_score_neg DESC
-        LIMIT 10
+        LIMIT 100
             '''
     cursor.execute(top10_saltiest_comments_query)
     conn.commit()
