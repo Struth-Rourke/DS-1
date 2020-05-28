@@ -12,6 +12,7 @@ requests = "*"
 psycopg2-binary = "*"
 pandas = "*"
 gunicorn = "*"
+flask-cors = "*"
 
 [dev-packages]
 
