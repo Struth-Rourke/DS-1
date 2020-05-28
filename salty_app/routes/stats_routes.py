@@ -6,7 +6,7 @@ from flask import Blueprint, render_template
 stats_routes = Blueprint("stats_routes", __name__)
 
 
-@stats_routes.route("/stats")
+@stats_routes.route("/top")
 def index():
     return render_template()
 
