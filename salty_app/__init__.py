@@ -4,7 +4,7 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
-from salty_app.models import db, migrate
+# from salty_app.models import db, migrate
 from salty_app.routes.home_routes import home_routes
 
 
@@ -19,12 +19,13 @@ def create_app():
     app = Flask(__name__)
     # Add CORS to app
     cors = CORS(app)
-    # Configures the DataBase w/ name specified by "DATABASE_URI"
-    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
-    # Initializes the DataBase
-    db.init_app(app)
-    # Migrates the app and DataBase
-    migrate.init_app(app, db)
+
+    # # Configures the DataBase w/ name specified by "DATABASE_URI"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+    # # Initializes the DataBase
+    # db.init_app(app)
+    # # Migrates the app and DataBase
+    # migrate.init_app(app, db)
 
     # Registering the "home_routes" blueprint
     app.register_blueprint(home_routes)

@@ -3,6 +3,9 @@ import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
+
+
+# Load environment variables from .env
 load_dotenv()
 
 
