@@ -1,15 +1,11 @@
 # salty_app/routes/home_routes.py
-import os
-import pandas as pd
-import psycopg2
-from psycopg2.extras import execute_values
-from flask import Blueprint, jsonify
-from dotenv import load_dotenv
+from flask import Blueprint
 from salty_app.sql_query_function import fetch_query_comments, fetch_query
 
 
 # Instantiate new blueprint object
 home_routes = Blueprint("home_routes", __name__)
+
 
 # "home" Route
 @home_routes.route("/home")

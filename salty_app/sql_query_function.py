@@ -54,7 +54,7 @@ def populate_comment_table_query(cursor, conn, i, item_json, maxitem):
             ]
         )
         conn.commit()
-        i+=1
+        i += 1
     else:
         # The record is already in the database
         # Alert the console
