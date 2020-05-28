@@ -20,6 +20,7 @@ Windows:
 These can be accessed locally at the following addresses: 
 ```sh 
 # /home will return all data in database
+http://localhost:5000/
 http://localhost:5000/home
 http://localhost:5000/top20_saltiest_users
 http://localhost:5000/top20_sweetest_users
@@ -33,6 +34,7 @@ http://localhost:5000/top100_sweetest_comments
 Endpoints if deployed to Heroku:  
 Below are the routes that return key-value pair data in JSON from a postgreSQL database. 
 ```sh
+http://saltyapp.herokuapp.com/
 https://saltyapp.herokuapp.com/home
 https://saltyapp.herokuapp.com/top20_saltiest_users
 https://saltyapp.herokuapp.com/top20_sweetest_users
