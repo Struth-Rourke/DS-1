@@ -1,8 +1,8 @@
 # Installation Instructions for Dependencies (pipenv, Mac/Linux)
 
-## Flask
+## Flask, Flask-Cors, Psycopg2, Gunicorn, Requests, Dotenv
 ```sh
-pipenv install Flask
+pipenv install Flask flask-cors psycopg2-binary gunicorn requests python-dotenv
 ```
 ## Flask-Cors
 ```sh
