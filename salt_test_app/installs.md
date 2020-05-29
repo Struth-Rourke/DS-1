@@ -1,4 +1,4 @@
-# Installation Instructions for Dependencies
+# Installation Instructions for Dependencies (pipenv, Mac/Linux)
 
 ## Flask
 ```sh
@@ -25,10 +25,10 @@ pipenv install requests
 pipenv install python-dotenv
 ```
 ## PostgreSQL Database Connection
-Example of what to place inside a .env file:
+Example of format to place credentials inside a .env file:
 ```py
 DB_USER="database-user"
 DB_NAME="database-name"
 DB_PASSWORD="database-password"
-DB_HOST="database-server-domain.host.com"
+DB_HOST="database-server-domain.com"
 ```
